@@ -1,5 +1,5 @@
 {
-  "name": "istanbul-lib-instrument",
+  "name": "codex-lib-instrument",
   "version": "4.0.3",
   "description": "Core istanbul API for JS code coverage",
   "author": "Krishnan Anantheswaran <kananthmail-github@yahoo.com>",

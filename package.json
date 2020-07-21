@@ -4,6 +4,10 @@
   "main": "index.js",
   "author": "Atif Afzal <aafzal@sumologic.com>",
   "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "start": "webpack-dev-server"
   },
