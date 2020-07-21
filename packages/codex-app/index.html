@@ -1,12 +1,32 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>Hello World!</title>
     <!-- https://electronjs.org/docs/tutorial/security#csp-meta-tag -->
-    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="script-src 'self' 'unsafe-inline';"
+    />
   </head>
   <body>
     <h1>Hello World!</h1>
+    <script>
+      const http = require("http");
+      const WebSocket = require("ws");
+
+      const server = http.createServer();
+      const wss = new WebSocket.Server({ server });
+
+      wss.on("connection", function connection(ws) {
+        ws.on("message", function incoming(message) {
+          console.log("received: %s", message);
+        });
+      });
+
+      server.listen(8090, () => {
+        console.log("http server started on port 8090");
+      });
+    </script>
   </body>
 </html>
