@@ -547,6 +547,17 @@ const coverageTemplate = template(
             coverage[path] = coverageData;
         }
 
+        window.__instructions__ = window.__instructions__ || [];
+        coverage[path].s = new Proxy(coverage[path].s, {
+            set(target, prop, val, receiver) {
+                window.__instructions__.push({
+                    path: path,
+                    statement: coverage[path].statementMap[prop],
+                });
+                return Reflect.set(target, prop, val, receiver);
+            }
+        });
+
         var actualCoverage = coverage[path];
         {
             // @ts-ignore

@@ -8,5 +8,5 @@
     "@babel/preset-typescript",
     "@babel/preset-react"
   ],
-  "plugins": ["istanbul"]
+  "plugins": ["@atfzl/babel-plugin-codex"]
 }

@@ -1,5 +1,5 @@
 {
-  "name": "babel-plugin-codex",
+  "name": "@atfzl/babel-plugin-codex",
   "version": "6.0.0",
   "author": "Thai Pangsakulyanont @dtinth",
   "license": "BSD-3-Clause",
@@ -12,7 +12,7 @@
     "@babel/helper-plugin-utils": "^7.0.0",
     "@istanbuljs/load-nyc-config": "^1.0.0",
     "@istanbuljs/schema": "^0.1.2",
-    "codex-lib-instrument": "^4.0.0",
+    "@atfzl/codex-lib-instrument": "^4.0.0",
     "test-exclude": "^6.0.0"
   },
   "devDependencies": {
