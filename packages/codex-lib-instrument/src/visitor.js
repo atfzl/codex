@@ -547,25 +547,29 @@ const coverageTemplate = template(
             coverage[path] = coverageData;
         }
 
-        window.__CODEX_BUFFER__ = window.__CODEX_BUFFER__ || [];
-        window.__CODEX_SOCKET__ = window.__CODEX_SOCKET__ || new WebSocket('ws://localhost:8090');
+        window.codexBuffer = window.codexBuffer || [];
+        window.codexSocket = window.codexSocket || new WebSocket('ws://localhost:8090');
+        function flushBuffer() {
+            window.codexBuffer.forEach(function(leftoverPayload) {
+                window.codexSocket.send(leftoverPayload);
+            });
+            window.codexBuffer = [];
+        }
+        window.codexSocket.onopen = flushBuffer;
         coverage[path].s = new Proxy(coverage[path].s, {
             set(target, prop, val, receiver) {
-                var payload = {
+                var payload = eval(('json').toUpperCase()).stringify({
                     href: window.location.href,
                     path: path,
                     statement: coverage[path].statementMap[prop],
-                };
+                });
 
-                if (window.__CODEX_SOCKET__.readyState === window.__CODEX_SOCKET__.OPEN) {
-                    window.__CODEX_BUFFER__.forEach(function(leftoverPayload) {
-                        window.__CODEX_SOCKET__.send(leftoverPayload);
-                    });
-                    window.__CODEX_BUFFER__ = [];
+                if (window.codexSocket.readyState === 1) {
+                    flushBuffer();
 
-                    window.__CODEX_SOCKET__.send(payload);
+                    window.codexSocket.send(payload);
                 } else {
-                    window.__CODEX_BUFFER__.push(payload);
+                    window.codexBuffer.push(payload);
                 }
 
                 return Reflect.set(target, prop, val, receiver);
