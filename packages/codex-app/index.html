@@ -10,7 +10,10 @@
     />
     <style>
       #code {
+        border: 1px solid black;
+        padding: 4px;
         font-family: monospace;
+        height: 400px;
       }
       .container {
         display: flex;
@@ -20,12 +23,13 @@
   </head>
   <body>
     <div class="container">
-      <textarea id="code" name="code" rows="25" cols="33"></textarea>
+      <pre id="code"></pre>
       <input type="range" id="slider" name="slider" min="0" max="0" />
     </div>
 
     <script>
       const http = require("http");
+      const fs = require("fs").promises;
       const WebSocket = require("ws");
 
       const server = http.createServer();
@@ -38,7 +42,10 @@
       $slider.onchange = (e) => {
         const index = e.target.value;
         if (index < values.length) {
-          $code.innerText = values[index].path;
+          const dataPoint = values[index];
+          fs.readFile(dataPoint.path, "utf8").then((data) => {
+            $code.innerText = data;
+          });
         }
       };
 
