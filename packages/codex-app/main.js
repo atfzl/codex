@@ -10,6 +10,7 @@ function createWindow() {
   })
 
   win.loadFile('index.html');
+  win.toggleDevTools();
 }
 
 // This method will be called when Electron has finished

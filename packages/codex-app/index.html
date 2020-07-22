@@ -9,25 +9,28 @@
       content="script-src 'self' 'unsafe-inline';"
     />
     <style>
-      #code {
-        border: 1px solid black;
-        padding: 4px;
-        font-family: monospace;
-        height: 400px;
-      }
       .container {
         display: flex;
         flex-direction: column;
       }
+      .codex-highlight {
+        background-color: yellow;
+      }
     </style>
+    <link
+      rel="stylesheet"
+      href="../../node_modules/codemirror/lib/codemirror.css"
+    />
   </head>
   <body>
     <div class="container">
-      <pre id="code"></pre>
+      <div id="code"></div>
       <input type="range" id="slider" name="slider" min="0" max="0" />
     </div>
 
     <script>
+      const CodeMirror = require("codemirror");
+      require("codemirror/mode/javascript/javascript.js");
       const http = require("http");
       const fs = require("fs").promises;
       const WebSocket = require("ws");
@@ -37,14 +40,27 @@
 
       const values = [];
       const $slider = document.getElementById("slider");
-      const $code = document.getElementById("code");
+      const $codemirror = CodeMirror(document.getElementById("code"), { readOnly: true });
 
       $slider.onchange = (e) => {
         const index = e.target.value;
         if (index < values.length) {
           const dataPoint = values[index];
           fs.readFile(dataPoint.path, "utf8").then((data) => {
-            $code.innerText = data;
+            $codemirror.setValue(data);
+            $codemirror.markText(
+              {
+                line: dataPoint.statement.start.line - 1,
+                ch: dataPoint.statement.start.column,
+              },
+              {
+                line: dataPoint.statement.end.line - 1,
+                ch: dataPoint.statement.end.column,
+              },
+              {
+                className: 'codex-highlight'
+              }
+            );
           });
         }
       };
