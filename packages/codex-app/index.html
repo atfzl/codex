@@ -8,9 +8,22 @@
       http-equiv="Content-Security-Policy"
       content="script-src 'self' 'unsafe-inline';"
     />
+    <style>
+      #code {
+        font-family: monospace;
+      }
+      .container {
+        display: flex;
+        flex-direction: column;
+      }
+    </style>
   </head>
   <body>
-    <h1>Hello World!</h1>
+    <div class="container">
+      <textarea id="code" name="code" rows="25" cols="33"></textarea>
+      <input type="range" id="slider" name="slider" min="0" max="0" />
+    </div>
+
     <script>
       const http = require("http");
       const WebSocket = require("ws");
@@ -18,10 +31,24 @@
       const server = http.createServer();
       const wss = new WebSocket.Server({ server });
 
+      const values = [];
+      const $slider = document.getElementById("slider");
+      const $code = document.getElementById("code");
+
+      $slider.onchange = (e) => {
+        const index = e.target.value;
+        if (index < values.length) {
+          $code.innerText = values[index].path;
+        }
+      };
+
       wss.on("connection", function connection(ws) {
-        console.log('connection created');
+        console.log("connection created");
         ws.on("message", function incoming(message) {
-          console.log("received message", message);
+          const parsedMessage = JSON.parse(message);
+          console.log("received message", parsedMessage);
+          values.push(parsedMessage);
+          $slider.setAttribute("max", values.length);
         });
       });
 
