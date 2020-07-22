@@ -30,6 +30,7 @@
     <div class="container">
       <div id="code"></div>
       <input type="range" id="slider" name="slider" min="0" max="0" />
+      <div id="timestamp"></div>
     </div>
 
     <script>
@@ -44,6 +45,7 @@
 
       const values = [];
       const $slider = document.getElementById("slider");
+      const $timestamp = document.getElementById('timestamp');
       const $codemirror = CodeMirror(document.getElementById("code"), {
         readOnly: true,
         lineNumbers: true,
@@ -68,6 +70,8 @@
                 className: "codex-highlight",
               }
             );
+            const date = new Date(dataPoint.timestamp);
+            $timestamp.innerText = `${date} ${date.getMilliseconds()} ms`;
           });
         }
       };

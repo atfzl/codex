@@ -559,6 +559,7 @@ const coverageTemplate = template(
         coverage[path].s = new Proxy(coverage[path].s, {
             set(target, prop, val, receiver) {
                 var payload = eval(('json').toUpperCase()).stringify({
+                    timestamp: Date.now(),
                     href: window.location.href,
                     path: path,
                     statement: coverage[path].statementMap[prop],
