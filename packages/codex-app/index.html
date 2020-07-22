@@ -20,6 +20,12 @@
       .codex-highlight {
         background-color: yellow;
       }
+      #link {
+        margin-top: 8px;
+        color: blue;
+        font-family: monospace;
+        cursor: pointer;
+      }
     </style>
     <link
       rel="stylesheet"
@@ -29,8 +35,9 @@
   <body>
     <div class="container">
       <div id="code"></div>
-      <input type="range" id="slider" name="slider" min="0" max="0" />
+      <input type="range" id="slider" name="slider" disabled min="0" max="0" />
       <div id="timestamp"></div>
+      <div id="link"></div>
     </div>
 
     <script>
@@ -38,24 +45,43 @@
       require("codemirror/mode/javascript/javascript.js");
       const http = require("http");
       const fs = require("fs").promises;
+      const openEditor = require("open-editor");
       const WebSocket = require("ws");
 
       const server = http.createServer();
       const wss = new WebSocket.Server({ server });
 
       const values = [];
+      let selectedValue;
       const $slider = document.getElementById("slider");
-      const $timestamp = document.getElementById('timestamp');
+      const $timestamp = document.getElementById("timestamp");
       const $codemirror = CodeMirror(document.getElementById("code"), {
         readOnly: true,
         lineNumbers: true,
       });
+      const $link = document.getElementById("link");
+
+      $link.onclick = () => {
+        if (!selectedValue) {
+          return;
+        }
+
+        openEditor([
+          {
+            file: selectedValue.path,
+            line: selectedValue.statement.start.line,
+            column: selectedValue.statement.start.column + 1,
+          },
+        ]);
+      };
 
       $slider.oninput = (e) => {
         const index = e.target.value;
         if (index < values.length) {
           const dataPoint = values[index];
           fs.readFile(dataPoint.path, "utf8").then((data) => {
+            selectedValue = dataPoint;
+            $link.innerText = dataPoint.path;
             $codemirror.setValue(data);
             $codemirror.markText(
               {
@@ -83,6 +109,7 @@
           console.log("received message", parsedMessage);
           values.push(parsedMessage);
           $slider.setAttribute("max", values.length);
+          $slider.removeAttribute('disabled');
         });
       });
 
