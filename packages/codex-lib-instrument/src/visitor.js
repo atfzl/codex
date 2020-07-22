@@ -547,13 +547,27 @@ const coverageTemplate = template(
             coverage[path] = coverageData;
         }
 
-        window.__instructions__ = window.__instructions__ || [];
+        window.__CODEX_BUFFER__ = window.__CODEX_BUFFER__ || [];
+        window.__CODEX_SOCKET__ = window.__CODEX_SOCKET__ || new WebSocket('ws://localhost:8090');
         coverage[path].s = new Proxy(coverage[path].s, {
             set(target, prop, val, receiver) {
-                window.__instructions__.push({
+                var payload = {
+                    href: window.location.href,
                     path: path,
                     statement: coverage[path].statementMap[prop],
-                });
+                };
+
+                if (window.__CODEX_SOCKET__.readyState === window.__CODEX_SOCKET__.OPEN) {
+                    window.__CODEX_BUFFER__.forEach(function(leftoverPayload) {
+                        window.__CODEX_SOCKET__.send(leftoverPayload);
+                    });
+                    window.__CODEX_BUFFER__ = [];
+
+                    window.__CODEX_SOCKET__.send(payload);
+                } else {
+                    window.__CODEX_BUFFER__.push(payload);
+                }
+
                 return Reflect.set(target, prop, val, receiver);
             }
         });

@@ -13,9 +13,3 @@ function foo() {
 }
 
 foo();
-
-let socket = new WebSocket("ws://localhost:8090");
-
-socket.onopen = function(e) {
-  socket.send("My name is John");
-};
