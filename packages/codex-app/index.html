@@ -13,6 +13,10 @@
         display: flex;
         flex-direction: column;
       }
+      #code {
+        max-height: 600px;
+        min-height: 600px;
+      }
       .codex-highlight {
         background-color: yellow;
       }
@@ -40,9 +44,12 @@
 
       const values = [];
       const $slider = document.getElementById("slider");
-      const $codemirror = CodeMirror(document.getElementById("code"), { readOnly: true });
+      const $codemirror = CodeMirror(document.getElementById("code"), {
+        readOnly: true,
+        lineNumbers: true,
+      });
 
-      $slider.onchange = (e) => {
+      $slider.oninput = (e) => {
         const index = e.target.value;
         if (index < values.length) {
           const dataPoint = values[index];
@@ -58,7 +65,7 @@
                 ch: dataPoint.statement.end.column,
               },
               {
-                className: 'codex-highlight'
+                className: "codex-highlight",
               }
             );
           });
