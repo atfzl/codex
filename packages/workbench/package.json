@@ -20,7 +20,7 @@
     "@types/html-webpack-plugin": "^3.2.3",
     "@types/webpack": "^4.41.18",
     "babel-loader": "^8.1.0",
-    "@atfzl/babel-plugin-codex": "^6.0.0",
+    "babel-plugin-codex": "^6.0.0",
     "html-webpack-plugin": "^4.3.0",
     "ts-node": "^8.10.2",
     "typescript": "^3.9.5",

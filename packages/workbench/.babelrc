@@ -8,5 +8,5 @@
     "@babel/preset-typescript",
     "@babel/preset-react"
   ],
-  "plugins": ["@atfzl/babel-plugin-codex"]
+  "plugins": ["babel-plugin-codex"]
 }
