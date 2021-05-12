@@ -10,7 +10,7 @@
     "electron": "^9.1.1"
   },
   "dependencies": {
-    "codemirror": "^5.56.0",
+    "codemirror": "^5.58.2",
     "open-editor": "^2.0.1",
     "ws": "^7.3.1"
   }
